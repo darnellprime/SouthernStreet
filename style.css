@@ -1,80 +1,277 @@
 body {
+
   margin: 0;
+  overflow: hidden;
   background: black;
-  font-family: Arial;
+  font-family: Arial, sans-serif;
+
 }
 
-/* LOADING */
+
+/* ================================================= */
+/* LOADING SCREEN */
+/* ================================================= */
+
 #loading-screen {
+
   position: fixed;
+
   width: 100%;
   height: 100%;
+
+  z-index: 9999;
+
   background: black;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+  overflow: hidden;
+
 }
 
-/* INTRO */
-#intro-scene {
-  position: fixed;
+.loading-background {
+
+  position: absolute;
+
   width: 100%;
   height: 100%;
+
+  background:
+    url('./assets/motel.png');
+
+  background-size: cover;
+  background-position: center;
+
+  filter:
+    blur(2px)
+    brightness(0.45);
+
+  transform: scale(1.1);
+
+}
+
+.loading-overlay {
+
+  position: absolute;
+
+  width: 100%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      rgba(0,0,0,0.3),
+      rgba(0,0,0,0.85)
+    );
+
+}
+
+.loading-content {
+
+  position: absolute;
+
+  bottom: 80px;
+  left: 80px;
+
+  color: white;
+
+  z-index: 2;
+
+}
+
+.loading-content h1 {
+
+  font-size: 58px;
+
+  margin: 0;
+
+  letter-spacing: 4px;
+
+}
+
+#loading-tip {
+
+  margin-top: 15px;
+
+  opacity: 0.8;
+
+  font-size: 20px;
+
+}
+
+.loading-bar-container {
+
+  width: 400px;
+  height: 8px;
+
+  background: rgba(255,255,255,0.15);
+
+  margin-top: 30px;
+
+  overflow: hidden;
+
+  border-radius: 20px;
+
+}
+
+#loading-bar {
+
+  width: 0%;
+  height: 100%;
+
+  background: orange;
+
+}
+
+
+/* ================================================= */
+/* INTRO */
+/* ================================================= */
+
+#intro-scene {
+
+  position: fixed;
+
+  width: 100%;
+  height: 100%;
+
   display: flex;
+
   justify-content: center;
   align-items: center;
-  background: rgba(0,0,0,0.7);
+
+  background:
+    linear-gradient(
+      rgba(0,0,0,0.4),
+      rgba(0,0,0,0.85)
+    );
+
   opacity: 0;
-  transition: 2s;
+
+  pointer-events: none;
+
+  z-index: 500;
+
 }
 
 .cinematic-overlay {
+
   text-align: center;
   color: white;
+
 }
 
 .location-title {
-  font-size: 72px;
+
+  font-size: 80px;
+
   letter-spacing: 8px;
-  animation: fadeText 4s ease, zoomIn 4s ease;
+
 }
 
 .story-text {
-  font-size: 20px;
-  opacity: 0.8;
-  animation: fadeText 6s ease;
+
+  font-size: 24px;
+
+  opacity: 0.85;
+
 }
 
-/* MISSION */
-#mission-box {
+
+/* ================================================= */
+/* HUD */
+/* ================================================= */
+
+#hud {
+
   position: absolute;
+
+  top: 20px;
+  right: 20px;
+
+  color: white;
+
+  z-index: 100;
+
+  text-align: right;
+
+}
+
+#money {
+
+  color: #4cff70;
+
+  font-size: 34px;
+
+  font-weight: bold;
+
+}
+
+#wanted {
+
+  color: orange;
+
+  font-size: 28px;
+
+}
+
+
+/* ================================================= */
+/* MISSION */
+/* ================================================= */
+
+#mission-box {
+
+  position: absolute;
+
   bottom: 30px;
   left: 30px;
-  width: 300px;
+
+  width: 350px;
+
   background: rgba(0,0,0,0.7);
-  color: white;
-  padding: 15px;
+
+  padding: 18px;
+
   border-left: 5px solid orange;
-}
 
-/* HUD */
-#hud {
-  position: absolute;
-  top: 10px;
-  right: 10px;
+  border-radius: 10px;
+
   color: white;
+
 }
 
-/* ANIMATIONS */
-@keyframes fadeText {
-  0% { opacity: 0; transform: translateY(10px); }
-  20% { opacity: 1; transform: translateY(0); }
-  80% { opacity: 1; }
-  100% { opacity: 0; }
+
+/* ================================================= */
+/* RADIO */
+/* ================================================= */
+
+#radio-box {
+
+  position: absolute;
+
+  bottom: 30px;
+  right: 30px;
+
+  background: rgba(0,0,0,0.65);
+
+  padding: 12px 20px;
+
+  border-radius: 8px;
+
+  color: white;
+
 }
 
-@keyframes zoomIn {
-  from { transform: scale(1.1); }
-  to { transform: scale(1); }
+
+/* ================================================= */
+/* CANVAS */
+/* ================================================= */
+
+canvas {
+
+  display: block;
+
+  filter:
+    contrast(1.05)
+    saturate(1.15)
+    brightness(0.92);
+
 }

@@ -1,39 +1,124 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Southern Stories</title>
-  <link rel="stylesheet" href="style.css" />
+
+  <meta charset="UTF-8">
+
+  <title>Southern Street Stories</title>
+
+  <link rel="stylesheet" href="style.css">
+
 </head>
+
 <body>
 
-<div id="hud">
-  <div id="healthBarContainer">
-    <div id="healthBar"></div>
+  <!-- GTA STYLE LOADING SCREEN -->
+
+  <div id="loading-screen">
+
+    <div class="loading-background"></div>
+
+    <div class="loading-overlay"></div>
+
+    <div class="loading-content">
+
+      <h1>
+        SOUTHERN STREET STORIES
+      </h1>
+
+      <p id="loading-tip">
+
+        "Bell Creek remembers everybody."
+
+      </p>
+
+      <div class="loading-bar-container">
+
+        <div id="loading-bar"></div>
+
+      </div>
+
+    </div>
+
   </div>
 
-  <div id="objectiveText">
-    Objective: Walk to Marlow Court
+
+  <!-- INTRO -->
+
+  <div id="intro-scene">
+
+    <div class="cinematic-overlay">
+
+      <h1 class="location-title">
+
+        REDWATER COUNTY
+
+      </h1>
+
+      <p class="story-text">
+
+        "You were gone for years.
+        Bell Creek never forgot your name."
+
+      </p>
+
+    </div>
+
   </div>
-</div>
 
-<div id="dialogueBox" class="hidden">
-  <div id="dialogueText"></div>
-</div>
 
-<div id="gameWorld">
+  <!-- MISSION -->
 
-  <div id="player"></div>
+  <div id="mission-box">
 
-  <div class="npc" id="missionNPC" style="left:600px; top:300px;">
-    !
+    <h2>MISSION</h2>
+
+    <p id="mission-text">
+
+      Drive to Redwater Gas & Oil
+
+    </p>
+
   </div>
 
-  <div class="enemy" style="left:900px; top:400px;"></div>
 
-</div>
+  <!-- HUD -->
 
-<script src="script.js"></script>
+  <div id="hud">
+
+    <div id="money">
+
+      $2,847
+
+    </div>
+
+    <div id="wanted">
+
+      ?????
+
+    </div>
+
+    <div id="weather-text">
+
+      Weather: Clear
+
+    </div>
+
+  </div>
+
+
+  <!-- RADIO -->
+
+  <div id="radio-box">
+
+    REDWATER FM —
+    Late Night Southern Trap
+
+  </div>
+
+
+  <script type="module" src="script.js"></script>
+
 </body>
 </html>

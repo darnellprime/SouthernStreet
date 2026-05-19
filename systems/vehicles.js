@@ -1,12 +1,40 @@
-export function spawnVehicle(name = "Sedan") {
-  console.log("Vehicle spawned:", name);
+import * as THREE
+from 'https://cdn.skypack.dev/three@0.152.2';
 
-  const hud = document.getElementById("hud");
+export function spawnTraffic(scene) {
 
-  const msg = document.createElement("p");
-  msg.innerText = "Vehicle Ready: " + name;
+  for (let i = 0; i < 20; i++) {
 
-  hud.appendChild(msg);
+    const car =
+      new THREE.Mesh(
 
-  setTimeout(() => msg.remove(), 4000);
+        new THREE.BoxGeometry(
+          2,
+          1,
+          4
+        ),
+
+        new THREE.MeshStandardMaterial({
+          color:
+            Math.random() > 0.5
+            ? 0x111111
+            : 0x555555
+        })
+
+      );
+
+    car.position.set(
+
+      (Math.random() - 0.5) * 20,
+
+      0.5,
+
+      (Math.random() - 0.5) * 250
+
+    );
+
+    scene.add(car);
+
+  }
+
 }

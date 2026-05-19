@@ -1,9 +1,15 @@
 // ======================================================
-// SOUTHERN STREET STORIES — MAIN GAME ENGINE
-// FULL THIRD PERSON GTA-STYLE SYSTEM
+// SOUTHERN STREET STORIES
+// FULL GTA-STYLE OPEN WORLD ENGINE
 // ======================================================
 
-import * as THREE from 'https://cdn.skypack.dev/three@0.152.2';
+
+// ======================================================
+// IMPORTS
+// ======================================================
+
+import * as THREE
+from 'https://cdn.skypack.dev/three@0.152.2';
 
 import { GLTFLoader }
 from 'https://cdn.skypack.dev/three/examples/jsm/loaders/GLTFLoader.js';
@@ -17,12 +23,22 @@ from './systems/weather.js';
 import { startMissionSystem }
 from './systems/missions.js';
 
+import { spawnTraffic }
+from './systems/vehicles.js';
+
+import { spawnNPCs }
+from './systems/npcs.js';
+
+import { startDayNight }
+from './systems/daynight.js';
+
 
 // ======================================================
 // SCENE
 // ======================================================
 
-const scene = new THREE.Scene();
+const scene =
+  new THREE.Scene();
 
 scene.background =
   new THREE.Color(0x4a3b2a);
@@ -31,7 +47,7 @@ scene.fog =
   new THREE.Fog(
     0x1f1b18,
     20,
-    120
+    180
   );
 
 
@@ -41,13 +57,23 @@ scene.fog =
 
 const camera =
   new THREE.PerspectiveCamera(
+
     75,
-    window.innerWidth / window.innerHeight,
+
+    window.innerWidth /
+    window.innerHeight,
+
     0.1,
+
     1000
+
   );
 
-camera.position.set(0, 3, 7);
+camera.position.set(
+  0,
+  3,
+  8
+);
 
 
 // ======================================================
@@ -56,7 +82,9 @@ camera.position.set(0, 3, 7);
 
 const renderer =
   new THREE.WebGLRenderer({
+
     antialias: true
+
   });
 
 renderer.setSize(
@@ -65,6 +93,9 @@ renderer.setSize(
 );
 
 renderer.shadowMap.enabled = true;
+
+renderer.outputEncoding =
+  THREE.sRGBEncoding;
 
 document.body.appendChild(
   renderer.domElement
@@ -77,13 +108,16 @@ document.body.appendChild(
 
 const sunsetLight =
   new THREE.DirectionalLight(
+
     0xffa95c,
-    2
+
+    2.2
+
   );
 
 sunsetLight.position.set(
-  15,
-  25,
+  20,
+  30,
   10
 );
 
@@ -94,9 +128,12 @@ scene.add(sunsetLight);
 
 const ambient =
   new THREE.AmbientLight(
+
     0xffd6a3,
-    0.8
-);
+
+    0.9
+
+  );
 
 scene.add(ambient);
 
@@ -109,12 +146,14 @@ const ground =
   new THREE.Mesh(
 
     new THREE.PlaneGeometry(
-      300,
-      300
+      500,
+      500
     ),
 
     new THREE.MeshStandardMaterial({
-      color: 0x2e2a26
+
+      color: 0x26221f
+
     })
 
   );
@@ -128,19 +167,21 @@ scene.add(ground);
 
 
 // ======================================================
-// REDWATER ROAD
+// ROAD
 // ======================================================
 
 const road =
   new THREE.Mesh(
 
     new THREE.PlaneGeometry(
-      12,
-      300
+      16,
+      500
     ),
 
     new THREE.MeshStandardMaterial({
-      color: 0x1a1a1a
+
+      color: 0x121212
+
     })
 
   );
@@ -148,13 +189,47 @@ const road =
 road.rotation.x =
   -Math.PI / 2;
 
-road.position.y = 0.01;
+road.position.y = 0.02;
 
 scene.add(road);
 
 
 // ======================================================
-// PLAYER
+// ROAD LINES
+// ======================================================
+
+for (let i = -240; i < 240; i += 12) {
+
+  const line =
+    new THREE.Mesh(
+
+      new THREE.BoxGeometry(
+        0.4,
+        0.02,
+        6
+      ),
+
+      new THREE.MeshStandardMaterial({
+
+        color: 0xffc400
+
+      })
+
+    );
+
+  line.position.set(
+    0,
+    0.03,
+    i
+  );
+
+  scene.add(line);
+
+}
+
+
+// ======================================================
+// PLAYER MODEL
 // ======================================================
 
 let player;
@@ -172,9 +247,9 @@ loader.load(
       gltf.scene;
 
     player.scale.set(
-      1.3,
-      1.3,
-      1.3
+      1.4,
+      1.4,
+      1.4
     );
 
     player.position.set(
@@ -195,6 +270,17 @@ loader.load(
 
     scene.add(player);
 
+  },
+
+  undefined,
+
+  (error) => {
+
+    console.error(
+      'MODEL FAILED TO LOAD:',
+      error
+    );
+
   }
 
 );
@@ -208,7 +294,7 @@ const cameraOffset =
   new THREE.Vector3(
     0,
     3,
-    -6
+    -7
   );
 
 function updateCamera() {
@@ -240,19 +326,33 @@ function updateCamera() {
 
 
 // ======================================================
-// PLAYER MOVEMENT
+// PLAYER CONTROLS
 // ======================================================
 
 const keys = {};
 
 document.addEventListener(
+
   'keydown',
-  (e) => keys[e.key.toLowerCase()] = true
+
+  (e) => {
+
+    keys[e.key.toLowerCase()] = true;
+
+  }
+
 );
 
 document.addEventListener(
+
   'keyup',
-  (e) => keys[e.key.toLowerCase()] = false
+
+  (e) => {
+
+    keys[e.key.toLowerCase()] = false;
+
+  }
+
 );
 
 
@@ -260,23 +360,30 @@ function updatePlayer() {
 
   if (!player) return;
 
-  const speed = 0.12;
+  const speed = 0.14;
 
   // FORWARD
+
   if (keys['w']) {
 
     player.position.z -= speed;
 
+    player.rotation.y = 0;
+
   }
 
   // BACKWARD
+
   if (keys['s']) {
 
     player.position.z += speed;
 
+    player.rotation.y = Math.PI;
+
   }
 
   // LEFT
+
   if (keys['a']) {
 
     player.position.x -= speed;
@@ -286,6 +393,7 @@ function updatePlayer() {
   }
 
   // RIGHT
+
   if (keys['d']) {
 
     player.position.x += speed;
@@ -298,10 +406,59 @@ function updatePlayer() {
 
 
 // ======================================================
-// CITY LIGHTS
+// BUILDINGS
 // ======================================================
 
-for (let i = 0; i < 40; i++) {
+for (let i = 0; i < 65; i++) {
+
+  const building =
+    new THREE.Mesh(
+
+      new THREE.BoxGeometry(
+
+        Math.random() * 8 + 5,
+
+        Math.random() * 18 + 8,
+
+        Math.random() * 8 + 5
+
+      ),
+
+      new THREE.MeshStandardMaterial({
+
+        color:
+          Math.random() > 0.5
+          ? 0x302823
+          : 0x3a312d
+
+      })
+
+    );
+
+  building.position.set(
+
+    (Math.random() > 0.5 ? -24 : 24),
+
+    building.geometry.parameters.height / 2,
+
+    (Math.random() - 0.5) * 450
+
+  );
+
+  building.castShadow = true;
+
+  building.receiveShadow = true;
+
+  scene.add(building);
+
+}
+
+
+// ======================================================
+// STREET LIGHTS
+// ======================================================
+
+for (let i = -240; i < 240; i += 20) {
 
   const pole =
     new THREE.Mesh(
@@ -309,38 +466,44 @@ for (let i = 0; i < 40; i++) {
       new THREE.CylinderGeometry(
         0.08,
         0.08,
-        6
+        8
       ),
 
       new THREE.MeshStandardMaterial({
+
         color: 0x444444
+
       })
 
     );
 
   pole.position.set(
-    (Math.random() > 0.5 ? -8 : 8),
-    3,
-    (Math.random() - 0.5) * 250
+    -10,
+    4,
+    i
   );
 
   scene.add(pole);
 
 
-  const bulb =
+  const light =
     new THREE.PointLight(
+
       0xffb347,
-      2,
-      20
+
+      1.8,
+
+      25
+
     );
 
-  bulb.position.set(
-    pole.position.x,
-    6,
-    pole.position.z
+  light.position.set(
+    -10,
+    8,
+    i
   );
 
-  scene.add(bulb);
+  scene.add(light);
 
 }
 
@@ -354,10 +517,10 @@ const fogGeometry =
 
 const fogVertices = [];
 
-for (let i = 0; i < 2500; i++) {
+for (let i = 0; i < 3500; i++) {
 
   fogVertices.push(
-    (Math.random() - 0.5) * 300
+    (Math.random() - 0.5) * 500
   );
 
   fogVertices.push(
@@ -365,7 +528,7 @@ for (let i = 0; i < 2500; i++) {
   );
 
   fogVertices.push(
-    (Math.random() - 0.5) * 300
+    (Math.random() - 0.5) * 500
   );
 
 }
@@ -383,101 +546,110 @@ fogGeometry.setAttribute(
 
 const fogMaterial =
   new THREE.PointsMaterial({
+
     color: 0xffffff,
+
     size: 0.08,
+
     transparent: true,
+
     opacity: 0.15
+
   });
 
 const fogParticles =
   new THREE.Points(
+
     fogGeometry,
+
     fogMaterial
+
   );
 
 scene.add(fogParticles);
 
 
 // ======================================================
-// SIMPLE BUILDINGS
+// NPCS
 // ======================================================
 
-for (let i = 0; i < 35; i++) {
+spawnNPCs(scene);
 
-  const building =
-    new THREE.Mesh(
 
-      new THREE.BoxGeometry(
+// ======================================================
+// TRAFFIC
+// ======================================================
 
-        Math.random() * 6 + 4,
-        Math.random() * 10 + 5,
-        Math.random() * 6 + 4
+spawnTraffic(scene);
 
-      ),
 
-      new THREE.MeshStandardMaterial({
-        color: 0x3a312d
-      })
+// ======================================================
+// DAY NIGHT SYSTEM
+// ======================================================
 
-    );
+startDayNight(scene);
 
-  building.position.set(
 
-    (Math.random() > 0.5 ? -18 : 18),
+// ======================================================
+// WEATHER
+// ======================================================
 
-    4,
+startWeatherSystem();
 
-    (Math.random() - 0.5) * 250
 
+// ======================================================
+// MISSIONS
+// ======================================================
+
+startMissionSystem();
+
+
+// ======================================================
+// LOADING SCREEN
+// ======================================================
+
+const loadingBar =
+  document.getElementById(
+    'loading-bar'
   );
 
-  scene.add(building);
+let progress = 0;
 
-}
+const loading =
+  setInterval(() => {
+
+    progress +=
+      Math.random() * 6;
+
+    loadingBar.style.width =
+      progress + '%';
+
+    if (progress >= 100) {
+
+      clearInterval(loading);
+
+      setTimeout(() => {
+
+        document.getElementById(
+          'loading-screen'
+        ).style.display = 'none';
+
+      }, 1500);
+
+    }
+
+  }, 400);
 
 
 // ======================================================
-// GAME SYSTEMS
+// STORY INTRO
 // ======================================================
 
-window.addEventListener(
+setTimeout(() => {
 
-  'DOMContentLoaded',
+  playIntroScene();
 
-  () => {
-
-    // LOADING SCREEN
-
-    setTimeout(() => {
-
-      document.getElementById(
-        'loading-screen'
-      ).style.display = 'none';
-
-    }, 3000);
-
-
-    // INTRO SCENE
-
-    setTimeout(() => {
-
-      playIntroScene();
-
-    }, 4000);
-
-
-    // WEATHER
-
-    startWeatherSystem();
-
-
-    // MISSIONS
-
-    startMissionSystem();
-
-  }
-
-);
+}, 8000);
 
 
 // ======================================================
@@ -497,8 +669,11 @@ window.addEventListener(
     camera.updateProjectionMatrix();
 
     renderer.setSize(
+
       window.innerWidth,
+
       window.innerHeight
+
     );
 
   }
@@ -520,7 +695,8 @@ function animate() {
 
   updateCamera();
 
-  fogParticles.rotation.y += 0.0005;
+  fogParticles.rotation.y +=
+    0.0003;
 
   renderer.render(
     scene,
