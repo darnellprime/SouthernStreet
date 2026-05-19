@@ -1,41 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Southern Street Stories</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Southern Stories</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
 
-<!-- LOADING SCREEN -->
-<div id="loading-screen">
-  <h1>Loading Redwater County...</h1>
-</div>
+<div id="hud">
+  <div id="healthBarContainer">
+    <div id="healthBar"></div>
+  </div>
 
-<!-- INTRO -->
-<div id="intro-scene">
-  <div class="cinematic-overlay">
-    <h1 class="location-title">REDWATER COUNTY</h1>
-    <p class="story-text">
-      "You were gone for years.  
-      Bell Creek never forgot your name."
-    </p>
+  <div id="objectiveText">
+    Objective: Walk to Marlow Court
   </div>
 </div>
 
-<!-- MISSION UI -->
-<div id="mission-box">
-  <h2>MISSION</h2>
-  <p id="mission-text">Drive to Redwater Gas & Oil</p>
+<div id="dialogueBox" class="hidden">
+  <div id="dialogueText"></div>
 </div>
 
-<!-- GAME UI -->
-<div id="hud">
-  <p id="weather-text">Weather: Clear</p>
+<div id="gameWorld">
+
+  <div id="player"></div>
+
+  <div class="npc" id="missionNPC" style="left:600px; top:300px;">
+    !
+  </div>
+
+  <div class="enemy" style="left:900px; top:400px;"></div>
+
 </div>
 
-<!-- GAME SCRIPT -->
-<script type="module" src="script.js"></script>
-
+<script src="script.js"></script>
 </body>
 </html>

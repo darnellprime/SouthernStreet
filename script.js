@@ -1,21 +1,53 @@
-import { playIntroScene } from './story.js';
-import { startWeatherSystem } from './systems/weather.js';
-import { startMissionSystem } from './systems/missions.js';
+const game = {
+  player: {
+    x: 100,
+    y: 100,
+    speed: 3,
+    health: 100,
+    state: "free" // free, mission, cutscene
+  },
 
-window.addEventListener('DOMContentLoaded', () => {
+  keys: {},
 
-  // fake loading delay
-  setTimeout(() => {
-    document.getElementById("loading-screen").style.display = "none";
-  }, 3000);
+  init() {
+    this.bindKeys();
+    this.loop();
+  },
 
-  // intro
-  setTimeout(() => {
-    playIntroScene();
-  }, 4000);
+  bindKeys() {
+    window.addEventListener("keydown", (e) => {
+      this.keys[e.key.toLowerCase()] = true;
+    });
 
-  // start systems
-  startWeatherSystem();
-  startMissionSystem();
+    window.addEventListener("keyup", (e) => {
+      this.keys[e.key.toLowerCase()] = false;
+    });
+  },
 
-});
+  update() {
+    if (this.player.state !== "free") return;
+
+    if (this.keys["w"]) this.player.y -= this.player.speed;
+    if (this.keys["s"]) this.player.y += this.player.speed;
+    if (this.keys["a"]) this.player.x -= this.player.speed;
+    if (this.keys["d"]) this.player.x += this.player.speed;
+
+    this.renderPlayer();
+  },
+
+  renderPlayer() {
+    const el = document.getElementById("player");
+
+    if (!el) return;
+
+    el.style.left = this.player.x + "px";
+    el.style.top = this.player.y + "px";
+  },
+
+  loop() {
+    this.update();
+    requestAnimationFrame(() => this.loop());
+  }
+};
+
+window.onload = () => game.init();
