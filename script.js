@@ -1,53 +1,20 @@
-// ======================================================
-// SOUTHERN STREET STORIES
-// FULL GTA-STYLE OPEN WORLD ENGINE
-// ======================================================
-
-
-// ======================================================
-// IMPORTS
-// ======================================================
-
-import * as THREE
-from 'https://cdn.skypack.dev/three@0.152.2';
-
-import { GLTFLoader }
-from 'https://cdn.skypack.dev/three/examples/jsm/loaders/GLTFLoader.js';
-
-import { playIntroScene }
-from './story.js';
-
-import { startWeatherSystem }
-from './systems/weather.js';
-
-import { startMissionSystem }
-from './systems/missions.js';
-
-import { spawnTraffic }
-from './systems/vehicles.js';
-
-import { spawnNPCs }
-from './systems/npcs.js';
-
-import { startDayNight }
-from './systems/daynight.js';
+import * as THREE from 'https://cdn.skypack.dev/three@0.152.2';
 
 
 // ======================================================
 // SCENE
 // ======================================================
 
-const scene =
-  new THREE.Scene();
+const scene = new THREE.Scene();
 
 scene.background =
-  new THREE.Color(0x4a3b2a);
+  new THREE.Color(0x6a4a32);
 
 scene.fog =
   new THREE.Fog(
-    0x1f1b18,
+    0x1a1614,
     20,
-    180
+    150
   );
 
 
@@ -57,23 +24,13 @@ scene.fog =
 
 const camera =
   new THREE.PerspectiveCamera(
-
     75,
-
-    window.innerWidth /
-    window.innerHeight,
-
+    window.innerWidth / window.innerHeight,
     0.1,
-
     1000
-
   );
 
-camera.position.set(
-  0,
-  3,
-  8
-);
+camera.position.set(0, 6, 12);
 
 
 // ======================================================
@@ -82,9 +39,7 @@ camera.position.set(
 
 const renderer =
   new THREE.WebGLRenderer({
-
     antialias: true
-
   });
 
 renderer.setSize(
@@ -93,9 +48,6 @@ renderer.setSize(
 );
 
 renderer.shadowMap.enabled = true;
-
-renderer.outputEncoding =
-  THREE.sRGBEncoding;
 
 document.body.appendChild(
   renderer.domElement
@@ -106,33 +58,27 @@ document.body.appendChild(
 // LIGHTING
 // ======================================================
 
-const sunsetLight =
+const sun =
   new THREE.DirectionalLight(
-
-    0xffa95c,
-
-    2.2
-
+    0xffb36b,
+    2
   );
 
-sunsetLight.position.set(
+sun.position.set(
   20,
   30,
   10
 );
 
-sunsetLight.castShadow = true;
+sun.castShadow = true;
 
-scene.add(sunsetLight);
+scene.add(sun);
 
 
 const ambient =
   new THREE.AmbientLight(
-
-    0xffd6a3,
-
-    0.9
-
+    0xffddb0,
+    1
   );
 
 scene.add(ambient);
@@ -151,9 +97,7 @@ const ground =
     ),
 
     new THREE.MeshStandardMaterial({
-
-      color: 0x26221f
-
+      color: 0x3b322c
     })
 
   );
@@ -174,14 +118,12 @@ const road =
   new THREE.Mesh(
 
     new THREE.PlaneGeometry(
-      16,
+      14,
       500
     ),
 
     new THREE.MeshStandardMaterial({
-
-      color: 0x121212
-
+      color: 0x111111
     })
 
   );
@@ -198,28 +140,26 @@ scene.add(road);
 // ROAD LINES
 // ======================================================
 
-for (let i = -240; i < 240; i += 12) {
+for (let i = -240; i < 240; i += 14) {
 
   const line =
     new THREE.Mesh(
 
       new THREE.BoxGeometry(
         0.4,
-        0.02,
+        0.05,
         6
       ),
 
       new THREE.MeshStandardMaterial({
-
         color: 0xffc400
-
       })
 
     );
 
   line.position.set(
     0,
-    0.03,
+    0.04,
     i
   );
 
@@ -229,198 +169,19 @@ for (let i = -240; i < 240; i += 12) {
 
 
 // ======================================================
-// PLAYER MODEL
-// ======================================================
-
-let player;
-
-const loader =
-  new GLTFLoader();
-
-loader.load(
-
-  './assets/protagonist.glb',
-
-  (gltf) => {
-
-    player =
-      gltf.scene;
-
-    player.scale.set(
-      1.4,
-      1.4,
-      1.4
-    );
-
-    player.position.set(
-      0,
-      0,
-      0
-    );
-
-    player.traverse((obj) => {
-
-      if (obj.isMesh) {
-
-        obj.castShadow = true;
-
-      }
-
-    });
-
-    scene.add(player);
-
-  },
-
-  undefined,
-
-  (error) => {
-
-    console.error(
-      'MODEL FAILED TO LOAD:',
-      error
-    );
-
-  }
-
-);
-
-
-// ======================================================
-// THIRD PERSON CAMERA
-// ======================================================
-
-const cameraOffset =
-  new THREE.Vector3(
-    0,
-    3,
-    -7
-  );
-
-function updateCamera() {
-
-  if (!player) return;
-
-  const offset =
-    cameraOffset.clone();
-
-  offset.applyQuaternion(
-    player.quaternion
-  );
-
-  camera.position.lerp(
-
-    player.position.clone().add(offset),
-
-    0.08
-
-  );
-
-  camera.lookAt(
-    player.position.x,
-    player.position.y + 2,
-    player.position.z
-  );
-
-}
-
-
-// ======================================================
-// PLAYER CONTROLS
-// ======================================================
-
-const keys = {};
-
-document.addEventListener(
-
-  'keydown',
-
-  (e) => {
-
-    keys[e.key.toLowerCase()] = true;
-
-  }
-
-);
-
-document.addEventListener(
-
-  'keyup',
-
-  (e) => {
-
-    keys[e.key.toLowerCase()] = false;
-
-  }
-
-);
-
-
-function updatePlayer() {
-
-  if (!player) return;
-
-  const speed = 0.14;
-
-  // FORWARD
-
-  if (keys['w']) {
-
-    player.position.z -= speed;
-
-    player.rotation.y = 0;
-
-  }
-
-  // BACKWARD
-
-  if (keys['s']) {
-
-    player.position.z += speed;
-
-    player.rotation.y = Math.PI;
-
-  }
-
-  // LEFT
-
-  if (keys['a']) {
-
-    player.position.x -= speed;
-
-    player.rotation.y = Math.PI / 2;
-
-  }
-
-  // RIGHT
-
-  if (keys['d']) {
-
-    player.position.x += speed;
-
-    player.rotation.y = -Math.PI / 2;
-
-  }
-
-}
-
-
-// ======================================================
 // BUILDINGS
 // ======================================================
 
-for (let i = 0; i < 65; i++) {
+for (let i = 0; i < 70; i++) {
 
   const building =
     new THREE.Mesh(
 
       new THREE.BoxGeometry(
 
-        Math.random() * 8 + 5,
-
-        Math.random() * 18 + 8,
-
-        Math.random() * 8 + 5
+        Math.random() * 6 + 4,
+        Math.random() * 20 + 6,
+        Math.random() * 6 + 4
 
       ),
 
@@ -428,8 +189,8 @@ for (let i = 0; i < 65; i++) {
 
         color:
           Math.random() > 0.5
-          ? 0x302823
-          : 0x3a312d
+          ? 0x4a3b32
+          : 0x352c28
 
       })
 
@@ -437,7 +198,7 @@ for (let i = 0; i < 65; i++) {
 
   building.position.set(
 
-    (Math.random() > 0.5 ? -24 : 24),
+    (Math.random() > 0.5 ? -22 : 22),
 
     building.geometry.parameters.height / 2,
 
@@ -455,55 +216,188 @@ for (let i = 0; i < 65; i++) {
 
 
 // ======================================================
-// STREET LIGHTS
+// PLAYER
 // ======================================================
 
-for (let i = -240; i < 240; i += 20) {
+const player =
+  new THREE.Mesh(
 
-  const pole =
+    new THREE.CapsuleGeometry(
+      0.7,
+      1.8,
+      4,
+      8
+    ),
+
+    new THREE.MeshStandardMaterial({
+      color: 0x2a2a2a
+    })
+
+  );
+
+player.position.y = 1.5;
+
+player.castShadow = true;
+
+scene.add(player);
+
+
+// ======================================================
+// CAMERA SYSTEM
+// ======================================================
+
+const cameraOffset =
+  new THREE.Vector3(
+    0,
+    5,
+    10
+  );
+
+function updateCamera() {
+
+  const target =
+    player.position.clone().add(
+      cameraOffset
+    );
+
+  camera.position.lerp(
+    target,
+    0.08
+  );
+
+  camera.lookAt(
+    player.position
+  );
+
+}
+
+
+// ======================================================
+// CONTROLS
+// ======================================================
+
+const keys = {};
+
+document.addEventListener(
+  'keydown',
+  (e) => {
+    keys[e.key.toLowerCase()] = true;
+  }
+);
+
+document.addEventListener(
+  'keyup',
+  (e) => {
+    keys[e.key.toLowerCase()] = false;
+  }
+);
+
+
+function updatePlayer() {
+
+  const speed = 0.22;
+
+  if (keys['w']) {
+
+    player.position.z -= speed;
+
+  }
+
+  if (keys['s']) {
+
+    player.position.z += speed;
+
+  }
+
+  if (keys['a']) {
+
+    player.position.x -= speed;
+
+  }
+
+  if (keys['d']) {
+
+    player.position.x += speed;
+
+  }
+
+}
+
+
+// ======================================================
+// NPCS
+// ======================================================
+
+for (let i = 0; i < 25; i++) {
+
+  const npc =
     new THREE.Mesh(
 
-      new THREE.CylinderGeometry(
-        0.08,
-        0.08,
+      new THREE.CapsuleGeometry(
+        0.5,
+        1.5,
+        4,
         8
       ),
 
       new THREE.MeshStandardMaterial({
-
         color: 0x444444
+      })
+
+    );
+
+  npc.position.set(
+
+    (Math.random() - 0.5) * 40,
+
+    1.2,
+
+    (Math.random() - 0.5) * 300
+
+  );
+
+  scene.add(npc);
+
+}
+
+
+// ======================================================
+// CARS
+// ======================================================
+
+for (let i = 0; i < 20; i++) {
+
+  const car =
+    new THREE.Mesh(
+
+      new THREE.BoxGeometry(
+        2,
+        1,
+        4
+      ),
+
+      new THREE.MeshStandardMaterial({
+
+        color:
+          Math.random() > 0.5
+          ? 0x111111
+          : 0x555555
 
       })
 
     );
 
-  pole.position.set(
-    -10,
-    4,
-    i
+  car.position.set(
+
+    (Math.random() - 0.5) * 10,
+
+    0.6,
+
+    (Math.random() - 0.5) * 400
+
   );
 
-  scene.add(pole);
-
-
-  const light =
-    new THREE.PointLight(
-
-      0xffb347,
-
-      1.8,
-
-      25
-
-    );
-
-  light.position.set(
-    -10,
-    8,
-    i
-  );
-
-  scene.add(light);
+  scene.add(car);
 
 }
 
@@ -512,39 +406,39 @@ for (let i = -240; i < 240; i += 20) {
 // ATMOSPHERIC FOG PARTICLES
 // ======================================================
 
-const fogGeometry =
+const particles =
   new THREE.BufferGeometry();
 
-const fogVertices = [];
+const verts = [];
 
-for (let i = 0; i < 3500; i++) {
+for (let i = 0; i < 4000; i++) {
 
-  fogVertices.push(
+  verts.push(
     (Math.random() - 0.5) * 500
   );
 
-  fogVertices.push(
+  verts.push(
     Math.random() * 20
   );
 
-  fogVertices.push(
+  verts.push(
     (Math.random() - 0.5) * 500
   );
 
 }
 
-fogGeometry.setAttribute(
+particles.setAttribute(
 
   'position',
 
   new THREE.Float32BufferAttribute(
-    fogVertices,
+    verts,
     3
   )
 
 );
 
-const fogMaterial =
+const particleMaterial =
   new THREE.PointsMaterial({
 
     color: 0xffffff,
@@ -559,97 +453,55 @@ const fogMaterial =
 
 const fogParticles =
   new THREE.Points(
-
-    fogGeometry,
-
-    fogMaterial
-
+    particles,
+    particleMaterial
   );
 
 scene.add(fogParticles);
 
 
 // ======================================================
-// NPCS
-// ======================================================
-
-spawnNPCs(scene);
-
-
-// ======================================================
-// TRAFFIC
-// ======================================================
-
-spawnTraffic(scene);
-
-
-// ======================================================
-// DAY NIGHT SYSTEM
-// ======================================================
-
-startDayNight(scene);
-
-
-// ======================================================
-// WEATHER
-// ======================================================
-
-startWeatherSystem();
-
-
-// ======================================================
-// MISSIONS
-// ======================================================
-
-startMissionSystem();
-
-
-// ======================================================
 // LOADING SCREEN
 // ======================================================
 
-const loadingBar =
+const loadingScreen =
   document.getElementById(
-    'loading-bar'
+    'loading-screen'
   );
-
-let progress = 0;
-
-const loading =
-  setInterval(() => {
-
-    progress +=
-      Math.random() * 6;
-
-    loadingBar.style.width =
-      progress + '%';
-
-    if (progress >= 100) {
-
-      clearInterval(loading);
-
-      setTimeout(() => {
-
-        document.getElementById(
-          'loading-screen'
-        ).style.display = 'none';
-
-      }, 1500);
-
-    }
-
-  }, 400);
-
-
-// ======================================================
-// STORY INTRO
-// ======================================================
 
 setTimeout(() => {
 
-  playIntroScene();
+  loadingScreen.style.display =
+    'none';
 
-}, 8000);
+}, 6000);
+
+
+// ======================================================
+// GAME LOOP
+// ======================================================
+
+function animate() {
+
+  requestAnimationFrame(
+    animate
+  );
+
+  updatePlayer();
+
+  updateCamera();
+
+  fogParticles.rotation.y +=
+    0.0002;
+
+  renderer.render(
+    scene,
+    camera
+  );
+
+}
+
+animate();
 
 
 // ======================================================
@@ -679,30 +531,3 @@ window.addEventListener(
   }
 
 );
-
-
-// ======================================================
-// GAME LOOP
-// ======================================================
-
-function animate() {
-
-  requestAnimationFrame(
-    animate
-  );
-
-  updatePlayer();
-
-  updateCamera();
-
-  fogParticles.rotation.y +=
-    0.0003;
-
-  renderer.render(
-    scene,
-    camera
-  );
-
-}
-
-animate();
