@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Southern Street Stories</title>
 
   <link rel="stylesheet" href="style.css">
@@ -17,11 +17,39 @@
 </head>
 <body>
 
+  <!-- LOADING SCREEN -->
+  <div id="loading-screen">
+
+    <div class="background-overlay"></div>
+
+    <div class="loading-content">
+
+      <img src="assets/logo.png" id="logo">
+
+      <h1>Southern Stories</h1>
+
+      <p class="version">BETA V0.1</p>
+
+      <div class="loading-bar-container">
+        <div class="loading-bar"></div>
+      </div>
+
+      <p class="tip">
+        TIP: Sheriff's deputies patrol Highway 14 heavily at night.
+      </p>
+
+    </div>
+
+  </div>
+
+  <!-- GAME HUD -->
   <div id="hud">
-    <h1>Southern Street Stories</h1>
+    <h2>Southern Stories</h2>
     <p>WASD to move</p>
   </div>
 
   <script type="module" src="script.js"></script>
+  <script src="loading.js"></script>
+
 </body>
 </html>
