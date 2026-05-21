@@ -2,85 +2,48 @@ const canvas = document.getElementById("renderCanvas");
 
 const engine = new BABYLON.Engine(canvas, true);
 
-const createScene = () => {
+const createScene = function () {
 
     const scene = new BABYLON.Scene(engine);
 
-    // ATMOSPHERE
-    scene.clearColor = new BABYLON.Color3(0.02, 0.02, 0.03);
+    // Background color
+    scene.clearColor = new BABYLON.Color4(0.02, 0.02, 0.03, 1);
 
     // CAMERA
-    const camera = new BABYLON.FreeCamera(
+    const camera = new BABYLON.UniversalCamera(
         "camera",
-        new BABYLON.Vector3(0, 5, -15),
+        new BABYLON.Vector3(0, 8, -20),
         scene
     );
 
-    camera.setTarget(BABYLON.Vector3.Zero());
+    camera.setTarget(new BABYLON.Vector3(0, 3, 0));
 
     camera.attachControl(canvas, true);
 
-    camera.speed = 0.6;
-
-    // LIGHTING
+    // LIGHT
     const light = new BABYLON.HemisphericLight(
         "light",
         new BABYLON.Vector3(0, 1, 0),
         scene
     );
 
-    light.intensity = 0.7;
+    light.intensity = 1;
 
-    // STREET
+    // GROUND
     const ground = BABYLON.MeshBuilder.CreateGround(
         "ground",
         {
-            width: 120,
-            height: 120
+            width: 200,
+            height: 200
         },
         scene
     );
 
     const groundMat = new BABYLON.StandardMaterial("groundMat", scene);
 
-    groundMat.diffuseColor = new BABYLON.Color3(0.05, 0.05, 0.05);
+    groundMat.diffuseColor = new BABYLON.Color3(0.08, 0.08, 0.08);
 
     ground.material = groundMat;
-
-    // BUILDINGS
-    for (let i = 0; i < 25; i++) {
-
-        const building = BABYLON.MeshBuilder.CreateBox(
-            "building",
-            {
-                width: 6,
-                depth: 6,
-                height: Math.random() * 20 + 8
-            },
-            scene
-        );
-
-        building.position.x = Math.random() * 100 - 50;
-        building.position.z = Math.random() * 100 - 50;
-
-        building.position.y = building.scaling.y * 2;
-
-        const mat = new BABYLON.StandardMaterial("mat", scene);
-
-        mat.diffuseColor = new BABYLON.Color3(
-            Math.random() * 0.2,
-            Math.random() * 0.2,
-            Math.random() * 0.2
-        );
-
-        mat.emissiveColor = new BABYLON.Color3(
-            0,
-            Math.random() * 0.3,
-            Math.random() * 0.5
-        );
-
-        building.material = mat;
-    }
 
     // PLAYER
     const player = BABYLON.MeshBuilder.CreateBox(
@@ -95,19 +58,50 @@ const createScene = () => {
 
     const playerMat = new BABYLON.StandardMaterial("playerMat", scene);
 
-    playerMat.diffuseColor = new BABYLON.Color3(0.8, 0.1, 0.1);
+    playerMat.diffuseColor = new BABYLON.Color3(1, 0, 0);
 
     player.material = playerMat;
 
-    // FOLLOW CAMERA EFFECT
-    scene.registerBeforeRender(() => {
+    // BUILDINGS
+    for (let i = 0; i < 40; i++) {
 
-        camera.position.x = player.position.x;
+        const height = Math.random() * 20 + 5;
 
-        camera.position.z = player.position.z - 12;
+        const building = BABYLON.MeshBuilder.CreateBox(
+            "building",
+            {
+                width: 6,
+                depth: 6,
+                height: height
+            },
+            scene
+        );
 
-        camera.position.y = player.position.y + 6;
-    });
+        building.position.x = Math.random() * 150 - 75;
+
+        building.position.z = Math.random() * 150 - 75;
+
+        building.position.y = height / 2;
+
+        const buildingMat = new BABYLON.StandardMaterial(
+            "buildingMat",
+            scene
+        );
+
+        buildingMat.diffuseColor = new BABYLON.Color3(
+            0.1,
+            0.1,
+            0.12
+        );
+
+        buildingMat.emissiveColor = new BABYLON.Color3(
+            0,
+            0.2,
+            0.4
+        );
+
+        building.material = buildingMat;
+    }
 
     // MOVEMENT
     const inputMap = {};
@@ -117,7 +111,7 @@ const createScene = () => {
     scene.actionManager.registerAction(
         new BABYLON.ExecuteCodeAction(
             BABYLON.ActionManager.OnKeyDownTrigger,
-            evt => {
+            function (evt) {
                 inputMap[evt.sourceEvent.key] = true;
             }
         )
@@ -126,7 +120,7 @@ const createScene = () => {
     scene.actionManager.registerAction(
         new BABYLON.ExecuteCodeAction(
             BABYLON.ActionManager.OnKeyUpTrigger,
-            evt => {
+            function (evt) {
                 inputMap[evt.sourceEvent.key] = false;
             }
         )
@@ -135,20 +129,29 @@ const createScene = () => {
     scene.onBeforeRenderObservable.add(() => {
 
         if (inputMap["w"]) {
-            player.position.z += 0.3;
+            player.position.z += 0.4;
         }
 
         if (inputMap["s"]) {
-            player.position.z -= 0.3;
+            player.position.z -= 0.4;
         }
 
         if (inputMap["a"]) {
-            player.position.x -= 0.3;
+            player.position.x -= 0.4;
         }
 
         if (inputMap["d"]) {
-            player.position.x += 0.3;
+            player.position.x += 0.4;
         }
+
+        // Camera follow
+        camera.position.x = player.position.x;
+
+        camera.position.z = player.position.z - 15;
+
+        camera.position.y = player.position.y + 8;
+
+        camera.setTarget(player.position);
     });
 
     return scene;
@@ -156,10 +159,10 @@ const createScene = () => {
 
 const scene = createScene();
 
-engine.runRenderLoop(() => {
+engine.runRenderLoop(function () {
     scene.render();
 });
 
-window.addEventListener("resize", () => {
+window.addEventListener("resize", function () {
     engine.resize();
 });
