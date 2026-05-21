@@ -1,277 +1,61 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
 body {
-
-  margin: 0;
   overflow: hidden;
   background: black;
-  font-family: Arial, sans-serif;
-
 }
 
-
-/* ================================================= */
-/* LOADING SCREEN */
-/* ================================================= */
-
-#loading-screen {
-
-  position: fixed;
-
-  width: 100%;
-  height: 100%;
-
-  z-index: 9999;
-
-  background: black;
-
-  overflow: hidden;
-
+#renderCanvas {
+  width: 100vw;
+  height: 100vh;
+  display: block;
 }
-
-.loading-background {
-
-  position: absolute;
-
-  width: 100%;
-  height: 100%;
-
-  background:
-    url('./assets/motel.png');
-
-  background-size: cover;
-  background-position: center;
-
-  filter:
-    blur(2px)
-    brightness(0.45);
-
-  transform: scale(1.1);
-
-}
-
-.loading-overlay {
-
-  position: absolute;
-
-  width: 100%;
-  height: 100%;
-
-  background:
-    linear-gradient(
-      rgba(0,0,0,0.3),
-      rgba(0,0,0,0.85)
-    );
-
-}
-
-.loading-content {
-
-  position: absolute;
-
-  bottom: 80px;
-  left: 80px;
-
-  color: white;
-
-  z-index: 2;
-
-}
-
-.loading-content h1 {
-
-  font-size: 58px;
-
-  margin: 0;
-
-  letter-spacing: 4px;
-
-}
-
-#loading-tip {
-
-  margin-top: 15px;
-
-  opacity: 0.8;
-
-  font-size: 20px;
-
-}
-
-.loading-bar-container {
-
-  width: 400px;
-  height: 8px;
-
-  background: rgba(255,255,255,0.15);
-
-  margin-top: 30px;
-
-  overflow: hidden;
-
-  border-radius: 20px;
-
-}
-
-#loading-bar {
-
-  width: 0%;
-  height: 100%;
-
-  background: orange;
-
-}
-
-
-/* ================================================= */
-/* INTRO */
-/* ================================================= */
-
-#intro-scene {
-
-  position: fixed;
-
-  width: 100%;
-  height: 100%;
-
-  display: flex;
-
-  justify-content: center;
-  align-items: center;
-
-  background:
-    linear-gradient(
-      rgba(0,0,0,0.4),
-      rgba(0,0,0,0.85)
-    );
-
-  opacity: 0;
-
-  pointer-events: none;
-
-  z-index: 500;
-
-}
-
-.cinematic-overlay {
-
-  text-align: center;
-  color: white;
-
-}
-
-.location-title {
-
-  font-size: 80px;
-
-  letter-spacing: 8px;
-
-}
-
-.story-text {
-
-  font-size: 24px;
-
-  opacity: 0.85;
-
-}
-
-
-/* ================================================= */
-/* HUD */
-/* ================================================= */
 
 #hud {
-
   position: absolute;
+  width: 100%;
+  z-index: 10;
+  pointer-events: none;
+}
 
+#logo {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+
+  font-size: 28px;
+  font-weight: bold;
+  color: white;
+
+  letter-spacing: 2px;
+
+  text-shadow: 0 0 15px rgba(255,255,255,0.6);
+}
+
+#mission {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+
+  color: white;
+  font-size: 20px;
+
+  background: rgba(0,0,0,0.5);
+  padding: 12px 18px;
+
+  border-left: 4px solid cyan;
+}
+
+#wanted {
+  position: absolute;
   top: 20px;
   right: 20px;
 
   color: white;
-
-  z-index: 100;
-
-  text-align: right;
-
-}
-
-#money {
-
-  color: #4cff70;
-
-  font-size: 34px;
-
-  font-weight: bold;
-
-}
-
-#wanted {
-
-  color: orange;
-
-  font-size: 28px;
-
-}
-
-
-/* ================================================= */
-/* MISSION */
-/* ================================================= */
-
-#mission-box {
-
-  position: absolute;
-
-  bottom: 30px;
-  left: 30px;
-
-  width: 350px;
-
-  background: rgba(0,0,0,0.7);
-
-  padding: 18px;
-
-  border-left: 5px solid orange;
-
-  border-radius: 10px;
-
-  color: white;
-
-}
-
-
-/* ================================================= */
-/* RADIO */
-/* ================================================= */
-
-#radio-box {
-
-  position: absolute;
-
-  bottom: 30px;
-  right: 30px;
-
-  background: rgba(0,0,0,0.65);
-
-  padding: 12px 20px;
-
-  border-radius: 8px;
-
-  color: white;
-
-}
-
-
-/* ================================================= */
-/* CANVAS */
-/* ================================================= */
-
-canvas {
-
-  display: block;
-
-  filter:
-    contrast(1.05)
-    saturate(1.15)
-    brightness(0.92);
-
+  font-size: 22px;
 }

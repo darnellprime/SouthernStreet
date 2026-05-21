@@ -1,124 +1,32 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <meta charset="UTF-8">
-
-  <title>Southern Street Stories</title>
+  <title>South Street Stories</title>
 
   <link rel="stylesheet" href="style.css">
 
+  <script src="https://cdn.babylonjs.com/babylon.js"></script>
 </head>
-
 <body>
 
-  <!-- GTA STYLE LOADING SCREEN -->
-
-  <div id="loading-screen">
-
-    <div class="loading-background"></div>
-
-    <div class="loading-overlay"></div>
-
-    <div class="loading-content">
-
-      <h1>
-        SOUTHERN STREET STORIES
-      </h1>
-
-      <p id="loading-tip">
-
-        "Bell Creek remembers everybody."
-
-      </p>
-
-      <div class="loading-bar-container">
-
-        <div id="loading-bar"></div>
-
-      </div>
-
-    </div>
-
-  </div>
-
-
-  <!-- INTRO -->
-
-  <div id="intro-scene">
-
-    <div class="cinematic-overlay">
-
-      <h1 class="location-title">
-
-        REDWATER COUNTY
-
-      </h1>
-
-      <p class="story-text">
-
-        "You were gone for years.
-        Bell Creek never forgot your name."
-
-      </p>
-
-    </div>
-
-  </div>
-
-
-  <!-- MISSION -->
-
-  <div id="mission-box">
-
-    <h2>MISSION</h2>
-
-    <p id="mission-text">
-
-      Drive to Redwater Gas & Oil
-
-    </p>
-
-  </div>
-
-
-  <!-- HUD -->
-
   <div id="hud">
+    <div id="logo">SOUTH STREET STORIES</div>
 
-    <div id="money">
-
-      $2,847
-
+    <div id="mission">
+      Mission: Ride Through South Street
     </div>
 
     <div id="wanted">
-
-      ?????
-
+      Wanted: ?????
     </div>
-
-    <div id="weather-text">
-
-      Weather: Clear
-
-    </div>
-
   </div>
 
+  <canvas id="renderCanvas"></canvas>
 
-  <!-- RADIO -->
-
-  <div id="radio-box">
-
-    REDWATER FM —
-    Late Night Southern Trap
-
-  </div>
-
-
-  <script type="module" src="script.js"></script>
+  <script src="script.js"></script>
 
 </body>
 </html>

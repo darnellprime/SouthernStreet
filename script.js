@@ -1,533 +1,165 @@
-import * as THREE from 'https://cdn.skypack.dev/three@0.152.2';
+const canvas = document.getElementById("renderCanvas");
 
+const engine = new BABYLON.Engine(canvas, true);
 
-// ======================================================
-// SCENE
-// ======================================================
+const createScene = () => {
 
-const scene = new THREE.Scene();
+    const scene = new BABYLON.Scene(engine);
 
-scene.background =
-  new THREE.Color(0x6a4a32);
+    // ATMOSPHERE
+    scene.clearColor = new BABYLON.Color3(0.02, 0.02, 0.03);
 
-scene.fog =
-  new THREE.Fog(
-    0x1a1614,
-    20,
-    150
-  );
-
-
-// ======================================================
-// CAMERA
-// ======================================================
-
-const camera =
-  new THREE.PerspectiveCamera(
-    75,
-    window.innerWidth / window.innerHeight,
-    0.1,
-    1000
-  );
-
-camera.position.set(0, 6, 12);
-
-
-// ======================================================
-// RENDERER
-// ======================================================
-
-const renderer =
-  new THREE.WebGLRenderer({
-    antialias: true
-  });
-
-renderer.setSize(
-  window.innerWidth,
-  window.innerHeight
-);
-
-renderer.shadowMap.enabled = true;
-
-document.body.appendChild(
-  renderer.domElement
-);
-
-
-// ======================================================
-// LIGHTING
-// ======================================================
-
-const sun =
-  new THREE.DirectionalLight(
-    0xffb36b,
-    2
-  );
-
-sun.position.set(
-  20,
-  30,
-  10
-);
-
-sun.castShadow = true;
-
-scene.add(sun);
-
-
-const ambient =
-  new THREE.AmbientLight(
-    0xffddb0,
-    1
-  );
-
-scene.add(ambient);
-
-
-// ======================================================
-// GROUND
-// ======================================================
-
-const ground =
-  new THREE.Mesh(
-
-    new THREE.PlaneGeometry(
-      500,
-      500
-    ),
-
-    new THREE.MeshStandardMaterial({
-      color: 0x3b322c
-    })
-
-  );
-
-ground.rotation.x =
-  -Math.PI / 2;
-
-ground.receiveShadow = true;
-
-scene.add(ground);
-
-
-// ======================================================
-// ROAD
-// ======================================================
-
-const road =
-  new THREE.Mesh(
-
-    new THREE.PlaneGeometry(
-      14,
-      500
-    ),
-
-    new THREE.MeshStandardMaterial({
-      color: 0x111111
-    })
-
-  );
-
-road.rotation.x =
-  -Math.PI / 2;
-
-road.position.y = 0.02;
-
-scene.add(road);
-
-
-// ======================================================
-// ROAD LINES
-// ======================================================
-
-for (let i = -240; i < 240; i += 14) {
-
-  const line =
-    new THREE.Mesh(
-
-      new THREE.BoxGeometry(
-        0.4,
-        0.05,
-        6
-      ),
-
-      new THREE.MeshStandardMaterial({
-        color: 0xffc400
-      })
-
+    // CAMERA
+    const camera = new BABYLON.FreeCamera(
+        "camera",
+        new BABYLON.Vector3(0, 5, -15),
+        scene
     );
 
-  line.position.set(
-    0,
-    0.04,
-    i
-  );
+    camera.setTarget(BABYLON.Vector3.Zero());
 
-  scene.add(line);
+    camera.attachControl(canvas, true);
 
-}
+    camera.speed = 0.6;
 
-
-// ======================================================
-// BUILDINGS
-// ======================================================
-
-for (let i = 0; i < 70; i++) {
-
-  const building =
-    new THREE.Mesh(
-
-      new THREE.BoxGeometry(
-
-        Math.random() * 6 + 4,
-        Math.random() * 20 + 6,
-        Math.random() * 6 + 4
-
-      ),
-
-      new THREE.MeshStandardMaterial({
-
-        color:
-          Math.random() > 0.5
-          ? 0x4a3b32
-          : 0x352c28
-
-      })
-
+    // LIGHTING
+    const light = new BABYLON.HemisphericLight(
+        "light",
+        new BABYLON.Vector3(0, 1, 0),
+        scene
     );
 
-  building.position.set(
+    light.intensity = 0.7;
 
-    (Math.random() > 0.5 ? -22 : 22),
-
-    building.geometry.parameters.height / 2,
-
-    (Math.random() - 0.5) * 450
-
-  );
-
-  building.castShadow = true;
-
-  building.receiveShadow = true;
-
-  scene.add(building);
-
-}
-
-
-// ======================================================
-// PLAYER
-// ======================================================
-
-const player =
-  new THREE.Mesh(
-
-    new THREE.CapsuleGeometry(
-      0.7,
-      1.8,
-      4,
-      8
-    ),
-
-    new THREE.MeshStandardMaterial({
-      color: 0x2a2a2a
-    })
-
-  );
-
-player.position.y = 1.5;
-
-player.castShadow = true;
-
-scene.add(player);
-
-
-// ======================================================
-// CAMERA SYSTEM
-// ======================================================
-
-const cameraOffset =
-  new THREE.Vector3(
-    0,
-    5,
-    10
-  );
-
-function updateCamera() {
-
-  const target =
-    player.position.clone().add(
-      cameraOffset
+    // STREET
+    const ground = BABYLON.MeshBuilder.CreateGround(
+        "ground",
+        {
+            width: 120,
+            height: 120
+        },
+        scene
     );
 
-  camera.position.lerp(
-    target,
-    0.08
-  );
+    const groundMat = new BABYLON.StandardMaterial("groundMat", scene);
 
-  camera.lookAt(
-    player.position
-  );
+    groundMat.diffuseColor = new BABYLON.Color3(0.05, 0.05, 0.05);
 
-}
+    ground.material = groundMat;
 
+    // BUILDINGS
+    for (let i = 0; i < 25; i++) {
 
-// ======================================================
-// CONTROLS
-// ======================================================
+        const building = BABYLON.MeshBuilder.CreateBox(
+            "building",
+            {
+                width: 6,
+                depth: 6,
+                height: Math.random() * 20 + 8
+            },
+            scene
+        );
 
-const keys = {};
+        building.position.x = Math.random() * 100 - 50;
+        building.position.z = Math.random() * 100 - 50;
 
-document.addEventListener(
-  'keydown',
-  (e) => {
-    keys[e.key.toLowerCase()] = true;
-  }
-);
+        building.position.y = building.scaling.y * 2;
 
-document.addEventListener(
-  'keyup',
-  (e) => {
-    keys[e.key.toLowerCase()] = false;
-  }
-);
+        const mat = new BABYLON.StandardMaterial("mat", scene);
 
+        mat.diffuseColor = new BABYLON.Color3(
+            Math.random() * 0.2,
+            Math.random() * 0.2,
+            Math.random() * 0.2
+        );
 
-function updatePlayer() {
+        mat.emissiveColor = new BABYLON.Color3(
+            0,
+            Math.random() * 0.3,
+            Math.random() * 0.5
+        );
 
-  const speed = 0.22;
+        building.material = mat;
+    }
 
-  if (keys['w']) {
-
-    player.position.z -= speed;
-
-  }
-
-  if (keys['s']) {
-
-    player.position.z += speed;
-
-  }
-
-  if (keys['a']) {
-
-    player.position.x -= speed;
-
-  }
-
-  if (keys['d']) {
-
-    player.position.x += speed;
-
-  }
-
-}
-
-
-// ======================================================
-// NPCS
-// ======================================================
-
-for (let i = 0; i < 25; i++) {
-
-  const npc =
-    new THREE.Mesh(
-
-      new THREE.CapsuleGeometry(
-        0.5,
-        1.5,
-        4,
-        8
-      ),
-
-      new THREE.MeshStandardMaterial({
-        color: 0x444444
-      })
-
+    // PLAYER
+    const player = BABYLON.MeshBuilder.CreateBox(
+        "player",
+        {
+            size: 2
+        },
+        scene
     );
 
-  npc.position.set(
+    player.position.y = 1;
 
-    (Math.random() - 0.5) * 40,
+    const playerMat = new BABYLON.StandardMaterial("playerMat", scene);
 
-    1.2,
+    playerMat.diffuseColor = new BABYLON.Color3(0.8, 0.1, 0.1);
 
-    (Math.random() - 0.5) * 300
+    player.material = playerMat;
 
-  );
+    // FOLLOW CAMERA EFFECT
+    scene.registerBeforeRender(() => {
 
-  scene.add(npc);
+        camera.position.x = player.position.x;
 
-}
+        camera.position.z = player.position.z - 12;
 
+        camera.position.y = player.position.y + 6;
+    });
 
-// ======================================================
-// CARS
-// ======================================================
+    // MOVEMENT
+    const inputMap = {};
 
-for (let i = 0; i < 20; i++) {
+    scene.actionManager = new BABYLON.ActionManager(scene);
 
-  const car =
-    new THREE.Mesh(
-
-      new THREE.BoxGeometry(
-        2,
-        1,
-        4
-      ),
-
-      new THREE.MeshStandardMaterial({
-
-        color:
-          Math.random() > 0.5
-          ? 0x111111
-          : 0x555555
-
-      })
-
+    scene.actionManager.registerAction(
+        new BABYLON.ExecuteCodeAction(
+            BABYLON.ActionManager.OnKeyDownTrigger,
+            evt => {
+                inputMap[evt.sourceEvent.key] = true;
+            }
+        )
     );
 
-  car.position.set(
-
-    (Math.random() - 0.5) * 10,
-
-    0.6,
-
-    (Math.random() - 0.5) * 400
-
-  );
-
-  scene.add(car);
-
-}
-
-
-// ======================================================
-// ATMOSPHERIC FOG PARTICLES
-// ======================================================
-
-const particles =
-  new THREE.BufferGeometry();
-
-const verts = [];
-
-for (let i = 0; i < 4000; i++) {
-
-  verts.push(
-    (Math.random() - 0.5) * 500
-  );
-
-  verts.push(
-    Math.random() * 20
-  );
-
-  verts.push(
-    (Math.random() - 0.5) * 500
-  );
-
-}
-
-particles.setAttribute(
-
-  'position',
-
-  new THREE.Float32BufferAttribute(
-    verts,
-    3
-  )
-
-);
-
-const particleMaterial =
-  new THREE.PointsMaterial({
-
-    color: 0xffffff,
-
-    size: 0.08,
-
-    transparent: true,
-
-    opacity: 0.15
-
-  });
-
-const fogParticles =
-  new THREE.Points(
-    particles,
-    particleMaterial
-  );
-
-scene.add(fogParticles);
-
-
-// ======================================================
-// LOADING SCREEN
-// ======================================================
-
-const loadingScreen =
-  document.getElementById(
-    'loading-screen'
-  );
-
-setTimeout(() => {
-
-  loadingScreen.style.display =
-    'none';
-
-}, 6000);
-
-
-// ======================================================
-// GAME LOOP
-// ======================================================
-
-function animate() {
-
-  requestAnimationFrame(
-    animate
-  );
-
-  updatePlayer();
-
-  updateCamera();
-
-  fogParticles.rotation.y +=
-    0.0002;
-
-  renderer.render(
-    scene,
-    camera
-  );
-
-}
-
-animate();
-
-
-// ======================================================
-// RESIZE
-// ======================================================
-
-window.addEventListener(
-
-  'resize',
-
-  () => {
-
-    camera.aspect =
-      window.innerWidth /
-      window.innerHeight;
-
-    camera.updateProjectionMatrix();
-
-    renderer.setSize(
-
-      window.innerWidth,
-
-      window.innerHeight
-
+    scene.actionManager.registerAction(
+        new BABYLON.ExecuteCodeAction(
+            BABYLON.ActionManager.OnKeyUpTrigger,
+            evt => {
+                inputMap[evt.sourceEvent.key] = false;
+            }
+        )
     );
 
-  }
+    scene.onBeforeRenderObservable.add(() => {
 
-);
+        if (inputMap["w"]) {
+            player.position.z += 0.3;
+        }
+
+        if (inputMap["s"]) {
+            player.position.z -= 0.3;
+        }
+
+        if (inputMap["a"]) {
+            player.position.x -= 0.3;
+        }
+
+        if (inputMap["d"]) {
+            player.position.x += 0.3;
+        }
+    });
+
+    return scene;
+};
+
+const scene = createScene();
+
+engine.runRenderLoop(() => {
+    scene.render();
+});
+
+window.addEventListener("resize", () => {
+    engine.resize();
+});
