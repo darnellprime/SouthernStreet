@@ -6,75 +6,64 @@ const createScene = () => {
 
     const scene = new BABYLON.Scene(engine);
 
-    // ATMOSPHERE
+    // CINEMATIC SUNSET ATMOSPHERE
     scene.clearColor = new BABYLON.Color4(
-        0.005,
-        0.005,
-        0.01,
+        0.75,
+        0.42,
+        0.15,
         1
     );
 
     scene.fogMode = BABYLON.Scene.FOGMODE_EXP;
 
-    scene.fogDensity = 0.02;
+    scene.fogDensity = 0.006;
 
     scene.fogColor = new BABYLON.Color3(
-        0.02,
-        0.02,
-        0.03
+        0.75,
+        0.42,
+        0.15
     );
 
     // CAMERA
     const camera = new BABYLON.UniversalCamera(
         "camera",
-        new BABYLON.Vector3(0, 7, -14),
+        new BABYLON.Vector3(0, 6, -14),
         scene
     );
 
-    camera.fov = 1.1;
+    camera.fov = 1.2;
 
-    // LIGHTING
-    const moonLight = new BABYLON.HemisphericLight(
-        "moonLight",
+    // SUNSET LIGHTING
+    const sun = new BABYLON.DirectionalLight(
+        "sun",
+        new BABYLON.Vector3(-1, -2, 1),
+        scene
+    );
+
+    sun.position = new BABYLON.Vector3(
+        40,
+        60,
+        -40
+    );
+
+    sun.intensity = 2.8;
+
+    sun.diffuse = new BABYLON.Color3(
+        1,
+        0.5,
+        0.2
+    );
+
+    // AMBIENT LIGHT
+    const ambient = new BABYLON.HemisphericLight(
+        "ambient",
         new BABYLON.Vector3(0, 1, 0),
         scene
     );
 
-    moonLight.intensity = 0.35;
+    ambient.intensity = 0.35;
 
-    // PLAYER
-    const player = BABYLON.MeshBuilder.CreateBox(
-        "player",
-        {
-            width: 1,
-            depth: 1,
-            height: 2
-        },
-        scene
-    );
-
-    player.position.y = 1;
-
-    const playerMaterial = new BABYLON.StandardMaterial(
-        "playerMaterial",
-        scene
-    );
-
-    playerMaterial.diffuseColor = new BABYLON.Color3(
-        0.85,
-        0.1,
-        0.1
-    );
-
-    playerMaterial.emissiveColor = new BABYLON.Color3(
-        0.15,
-        0,
-        0
-    );
-
-    player.material = playerMaterial;
-
-    // CITY GROUND
+    // STREET
     const ground = BABYLON.MeshBuilder.CreateGround(
         "ground",
         {
@@ -84,24 +73,27 @@ const createScene = () => {
         scene
     );
 
-    const groundMaterial = new BABYLON.StandardMaterial(
-        "groundMaterial",
-        scene
-    );
+    const groundMat =
+        new BABYLON.StandardMaterial(
+            "groundMat",
+            scene
+        );
 
-    groundMaterial.diffuseColor = new BABYLON.Color3(
-        0.03,
-        0.03,
-        0.04
-    );
+    groundMat.diffuseColor =
+        new BABYLON.Color3(
+            0.08,
+            0.05,
+            0.04
+        );
 
-    groundMaterial.specularColor = new BABYLON.Color3(
-        0.4,
-        0.4,
-        0.4
-    );
+    groundMat.specularColor =
+        new BABYLON.Color3(
+            1,
+            0.5,
+            0.2
+        );
 
-    ground.material = groundMaterial;
+    ground.material = groundMat;
 
     // MAIN ROAD
     const road = BABYLON.MeshBuilder.CreateBox(
@@ -116,132 +108,133 @@ const createScene = () => {
 
     road.position.y = 0.05;
 
-    const roadMaterial = new BABYLON.StandardMaterial(
-        "roadMaterial",
-        scene
-    );
+    const roadMat =
+        new BABYLON.StandardMaterial(
+            "roadMat",
+            scene
+        );
 
-    roadMaterial.diffuseColor = new BABYLON.Color3(
-        0.01,
-        0.01,
-        0.01
-    );
+    roadMat.diffuseColor =
+        new BABYLON.Color3(
+            0.03,
+            0.03,
+            0.03
+        );
 
-    road.material = roadMaterial;
+    road.material = roadMat;
 
     // BUILDINGS
-    for (let i = 0; i < 120; i++) {
+    for (let i = 0; i < 160; i++) {
 
-        const size = Math.random() * 8 + 5;
+        const width =
+            Math.random() * 10 + 5;
 
-        const height = Math.random() * 40 + 8;
+        const depth =
+            Math.random() * 10 + 5;
 
-        const building = BABYLON.MeshBuilder.CreateBox(
-            "building",
-            {
-                width: size,
-                depth: size,
-                height: height
-            },
-            scene
-        );
+        const height =
+            Math.random() * 60 + 8;
 
-        const side = Math.random() > 0.5 ? 1 : -1;
-
-        building.position.x =
-            side * (Math.random() * 80 + 18);
-
-        building.position.z =
-            Math.random() * 450 - 225;
-
-        building.position.y = height / 2;
-
-        const buildingMaterial =
-            new BABYLON.StandardMaterial(
-                "buildingMaterial",
-                scene
-            );
-
-        buildingMaterial.diffuseColor =
-            new BABYLON.Color3(
-                0.05,
-                0.05,
-                0.07
-            );
-
-        buildingMaterial.emissiveColor =
-            new BABYLON.Color3(
-                0,
-                Math.random() * 0.15,
-                Math.random() * 0.3
-            );
-
-        building.material = buildingMaterial;
-    }
-
-    // STREET LIGHTS
-    for (let i = -200; i < 200; i += 20) {
-
-        const pole = BABYLON.MeshBuilder.CreateCylinder(
-            "pole",
-            {
-                height: 9,
-                diameter: 0.25
-            },
-            scene
-        );
-
-        pole.position = new BABYLON.Vector3(
-            -10,
-            4.5,
-            i
-        );
-
-        const lightSphere =
-            BABYLON.MeshBuilder.CreateSphere(
-                "lightSphere",
+        const building =
+            BABYLON.MeshBuilder.CreateBox(
+                "building",
                 {
-                    diameter: 0.6
+                    width,
+                    depth,
+                    height
                 },
                 scene
             );
 
-        lightSphere.position = new BABYLON.Vector3(
-            -10,
-            9,
-            i
-        );
+        const side =
+            Math.random() > 0.5 ? 1 : -1;
 
-        const bulbMaterial =
+        building.position.x =
+            side * (Math.random() * 90 + 20);
+
+        building.position.z =
+            Math.random() * 450 - 225;
+
+        building.position.y =
+            height / 2;
+
+        const mat =
             new BABYLON.StandardMaterial(
-                "bulbMaterial",
+                "mat",
                 scene
             );
 
-        bulbMaterial.emissiveColor =
+        mat.diffuseColor =
             new BABYLON.Color3(
-                1,
-                0.8,
-                0.5
+                0.12,
+                0.08,
+                0.06
             );
 
-        lightSphere.material = bulbMaterial;
+        mat.emissiveColor =
+            new BABYLON.Color3(
+                0.25,
+                0.1,
+                0.04
+            );
 
-        const pointLight =
+        building.material = mat;
+    }
+
+    // STREETLIGHTS
+    for (let i = -220; i < 220; i += 18) {
+
+        const light =
             new BABYLON.PointLight(
-                "pointLight",
+                "street",
                 new BABYLON.Vector3(
-                    -10,
-                    9,
+                    -11,
+                    8,
                     i
                 ),
                 scene
             );
 
-        pointLight.intensity = 4;
+        light.intensity = 8;
+
+        light.diffuse =
+            new BABYLON.Color3(
+                1,
+                0.65,
+                0.3
+            );
     }
 
-    // INPUT
+    // PLAYER
+    const player =
+        BABYLON.MeshBuilder.CreateBox(
+            "player",
+            {
+                width: 1,
+                depth: 1,
+                height: 2
+            },
+            scene
+        );
+
+    player.position.y = 1;
+
+    const playerMat =
+        new BABYLON.StandardMaterial(
+            "playerMat",
+            scene
+        );
+
+    playerMat.diffuseColor =
+        new BABYLON.Color3(
+            0.05,
+            0.05,
+            0.05
+        );
+
+    player.material = playerMat;
+
+    // CONTROLS
     const input = {};
 
     scene.actionManager =
@@ -268,7 +261,7 @@ const createScene = () => {
     // GAME LOOP
     scene.onBeforeRenderObservable.add(() => {
 
-        const speed = 0.35;
+        const speed = 0.42;
 
         if (input["w"]) {
             player.position.z += speed;
@@ -286,19 +279,28 @@ const createScene = () => {
             player.position.x += speed;
         }
 
-        // CAMERA FOLLOW
+        // SMOOTH CAMERA
         camera.position.x +=
-            (player.position.x - camera.position.x) * 0.08;
+            (player.position.x - camera.position.x)
+            * 0.05;
 
         camera.position.y +=
-            ((player.position.y + 6)
-            - camera.position.y) * 0.08;
+            ((player.position.y + 5)
+            - camera.position.y)
+            * 0.05;
 
         camera.position.z +=
-            ((player.position.z - 14)
-            - camera.position.z) * 0.08;
+            ((player.position.z - 12)
+            - camera.position.z)
+            * 0.05;
 
-        camera.setTarget(player.position);
+        camera.setTarget(
+            new BABYLON.Vector3(
+                player.position.x,
+                player.position.y + 1,
+                player.position.z
+            )
+        );
     });
 
     return scene;
