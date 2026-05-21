@@ -1,32 +1,40 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
-  <title>South Street Stories</title>
+    <meta charset="UTF-8">
 
-  <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <script src="https://cdn.babylonjs.com/babylon.js"></script>
+    <title>South Street Stories: NIGHTLINE</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.babylonjs.com/babylon.js"></script>
+
 </head>
+
 <body>
 
-  <div id="hud">
-    <div id="logo">SOUTH STREET STORIES</div>
+    <div id="overlay">
 
-    <div id="mission">
-      Mission: Ride Through South Street
+        <div id="title">
+            SOUTH STREET STORIES
+        </div>
+
+        <div id="subtitle">
+            NIGHTLINE
+        </div>
+
+        <div id="controls">
+            WASD TO MOVE
+        </div>
+
     </div>
 
-    <div id="wanted">
-      Wanted: ?????
-    </div>
-  </div>
+    <canvas id="gameCanvas"></canvas>
 
-  <canvas id="renderCanvas"></canvas>
-
-  <script src="script.js"></script>
+    <script src="game.js"></script>
 
 </body>
 </html>

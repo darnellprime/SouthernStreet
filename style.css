@@ -1,61 +1,70 @@
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-  overflow: hidden;
-  background: black;
+    overflow: hidden;
+    background: black;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
-#renderCanvas {
-  width: 100vw;
-  height: 100vh;
-  display: block;
+#gameCanvas {
+    width: 100vw;
+    height: 100vh;
+    display: block;
 }
 
-#hud {
-  position: absolute;
-  width: 100%;
-  z-index: 10;
-  pointer-events: none;
+#overlay {
+    position: absolute;
+    z-index: 100;
+    width: 100%;
+    pointer-events: none;
 }
 
-#logo {
-  position: absolute;
-  top: 20px;
-  left: 20px;
+#title {
+    position: absolute;
+    top: 30px;
+    left: 40px;
 
-  font-size: 28px;
-  font-weight: bold;
-  color: white;
+    color: white;
 
-  letter-spacing: 2px;
+    font-size: 38px;
+    font-weight: bold;
 
-  text-shadow: 0 0 15px rgba(255,255,255,0.6);
+    letter-spacing: 4px;
+
+    text-shadow:
+        0 0 10px rgba(255,255,255,0.4),
+        0 0 20px rgba(0,200,255,0.5);
 }
 
-#mission {
-  position: absolute;
-  bottom: 40px;
-  left: 40px;
+#subtitle {
+    position: absolute;
+    top: 80px;
+    left: 42px;
 
-  color: white;
-  font-size: 20px;
+    color: cyan;
 
-  background: rgba(0,0,0,0.5);
-  padding: 12px 18px;
+    font-size: 18px;
 
-  border-left: 4px solid cyan;
+    letter-spacing: 10px;
 }
 
-#wanted {
-  position: absolute;
-  top: 20px;
-  right: 20px;
+#controls {
+    position: absolute;
 
-  color: white;
-  font-size: 22px;
+    bottom: 40px;
+    left: 40px;
+
+    color: white;
+
+    background: rgba(0,0,0,0.45);
+
+    padding: 12px 18px;
+
+    border: 1px solid rgba(255,255,255,0.15);
+
+    backdrop-filter: blur(8px);
 }
